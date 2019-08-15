@@ -39,6 +39,7 @@ LOCAL_SRC_FILES :=  \
     api1/client2/JpegCompressor.cpp \
     api1/client2/CaptureSequencer.cpp \
     api1/client2/ZslProcessor.cpp \
+    api1/StreamImgBuf.cpp \
     api2/CameraDeviceClient.cpp \
     device1/CameraHardwareInterface.cpp \
     device3/Camera3Device.cpp \
@@ -76,6 +77,8 @@ LOCAL_SHARED_LIBRARIES:= \
     libhidltransport \
     libjpeg \
     libmemunreachable \
+    libcam.client \
+    libcam_utils \
     android.hardware.camera.common@1.0 \
     android.hardware.camera.provider@2.4 \
     android.hardware.camera.device@1.0 \
@@ -94,12 +97,17 @@ LOCAL_EXPORT_SHARED_LIBRARY_HEADERS := libbinder libcamera_client libfmq
 
 LOCAL_C_INCLUDES += \
     system/media/private/camera/include \
-    frameworks/native/include/media/openmax
+    system/media/camera/include \
+    frameworks/native/include/media/openmax \
+    frameworks/native/libs/nativewindow/include \
+    frameworks/native/libs/nativewindow/include \
+    frameworks/native/libs/nativebase/include \
+    frameworks/native/libs/arect/include
 
 LOCAL_EXPORT_C_INCLUDE_DIRS := \
     frameworks/av/services/camera/libcameraservice
 
-LOCAL_CFLAGS += -Wall -Wextra -Werror
+LOCAL_CFLAGS += -Wall -Wextra -Werror -DMTK_HARDWARE
 
 ifeq ($(TARGET_HAS_LEGACY_CAMERA_HAL1),true)
     LOCAL_CFLAGS += -DNO_CAMERA_SERVER

@@ -58,6 +58,7 @@ using hardware::cas::native::V1_0::IDescrambler;
 struct MediaCodec : public AHandler {
     enum ConfigureFlags {
         CONFIGURE_FLAG_ENCODE   = 1,
+        CONFIGURE_FLAG_ENABLE_THUMBNAIL_OPTIMIZATION = (0x1<<2),
     };
 
     enum BufferFlags {
@@ -66,6 +67,14 @@ struct MediaCodec : public AHandler {
         BUFFER_FLAG_EOS           = 4,
         BUFFER_FLAG_PARTIAL_FRAME = 8,
         BUFFER_FLAG_MUXER_DATA    = 16,
+//mtk
+        BUFFER_FLAG_ENDOFFRAME  = 8,
+        BUFFER_FLAG_DUMMY       = 16,
+        BUFFER_FLAG_INTERPOLATE_FRAME  = 32,
+        BUFFER_FLAG_INVALID_PTS = 64,
+        BUFFER_FLAG_PARTAIL_FRAME  = 128,
+        BUFFER_FLAG_MULTISLICE = 256,
+
     };
 
     enum {

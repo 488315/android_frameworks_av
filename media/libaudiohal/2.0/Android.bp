@@ -21,6 +21,8 @@ cc_library_shared {
     cflags: [
         "-Wall",
         "-Werror",
+	"-DLEGACY_MTK_AV_BLOB",
+	"-DMTK_HARDWARE",
     ],
     shared_libs: [
         "libaudiohal_deathhandler",

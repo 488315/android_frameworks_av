@@ -111,6 +111,11 @@ class DeviceHalLocal : public DeviceHalInterface
   private:
     audio_hw_device_t *mDev;
 
+#ifdef MTK_HARDWARE
+    audio_stream_in_t *mIn;
+#endif
+
+
     friend class DevicesFactoryHalLocal;
 
     // Can not be constructed directly by clients.

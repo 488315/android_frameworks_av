@@ -671,8 +671,8 @@ status_t BnOMXNode::onTransact(
             CHECK_OMX_INTERFACE(IOMXNode, data, reply);
 
             OMX_INDEXTYPE index = static_cast<OMX_INDEXTYPE>(data.readInt32());
-
-            size_t size = data.readInt64();
+//test
+            size_t size = data.readInt32();
 
             status_t err = NOT_ENOUGH_DATA;
             void *params = NULL;

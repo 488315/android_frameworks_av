@@ -36,6 +36,7 @@ constexpr T MIN(const T &a, const T &b) { return a <= b ? a : b; }
 static const size_t kSharedMemoryThreshold = MIN(
         (size_t)MediaBuffer::kSharedMemThreshold, (size_t)(4 * 1024));
 
+
 struct MediaBufferGroup::InternalData {
     Mutex mLock;
     Condition mCondition;

@@ -62,6 +62,7 @@ cc_library_shared {
     cflags: [
         "-Werror",
         "-Wall",
+	"-DMTK_CAMERA",
     ],
 
     shared_libs: [
@@ -172,6 +173,7 @@ cc_library_shared {
         "android.hidl.allocator@1.0",
         "android.hardware.cas.native@1.0",
         "android.hardware.media.omx@1.0",
+        "libdpframework",
         "android.hardware.graphics.allocator@2.0",
         "android.hardware.graphics.mapper@2.0",
     ],
@@ -289,6 +291,7 @@ cc_library {
         "-Werror",
         "-Wno-error=deprecated-declarations",
         "-Wall",
+	"-DMTK_HARDWARE",
     ],
 
     product_variables: {

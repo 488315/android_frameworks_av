@@ -30,8 +30,13 @@ class MediaBufferBase;
 
 class MediaBufferGroup : public MediaBufferObserver {
 public:
-    MediaBufferGroup(size_t growthLimit = 0);
+#ifdef MTK_HARDWARE
+    MediaBufferGroup();
+    MediaBufferGroup(size_t growthLimit);
+#else
 
+    MediaBufferGroup(size_t growthLimit = 0);
+#endif
     // create a media buffer group with preallocated buffers
     MediaBufferGroup(size_t buffers, size_t buffer_size, size_t growthLimit = 0);
 
@@ -49,6 +54,7 @@ public:
     // If requestedSize is 0, any free MediaBuffer will be returned.
     // If requestedSize is > 0, the returned MediaBuffer should have buffer
     // size of at least requstedSize.
+
     status_t acquire_buffer(
             MediaBufferBase **buffer, bool nonBlocking = false, size_t requestedSize = 0);
 

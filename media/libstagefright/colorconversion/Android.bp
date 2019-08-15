@@ -7,17 +7,20 @@ cc_library_static {
     ],
 
     include_dirs: [
+	"frameworks/av/media/libstagefright/colorconversion/inc",
         "frameworks/native/include/media/openmax",
     ],
 
     shared_libs: [
         "libui",
         "libnativewindow",
+	"libdpframework",
     ],
 
     static_libs: ["libyuv_static"],
 
-    cflags: ["-Werror"],
+    cflags: ["-Werror",
+             ],
 
     sanitize: {
         misc_undefined: [
