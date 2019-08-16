@@ -190,8 +190,8 @@ protected:
     int32_t  mNumInputBuffers;
     int32_t  mVideoFrameRate;
     int32_t  mColorFormat;
-//    int32_t  mEncoderFormat;
-//    int32_t  mEncoderDataSpace;
+    int32_t  mEncoderFormat;
+    int32_t  mEncoderDataSpace;
     status_t mInitCheck;
 
     sp<Camera>   mCamera;

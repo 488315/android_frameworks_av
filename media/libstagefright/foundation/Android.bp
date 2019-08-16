@@ -40,7 +40,7 @@ cc_library {
         "-Wno-multichar",
         "-Werror",
         "-Wall",
-	"-DMTK_HARDWARE",
+	    "-DMTK_HARDWARE",
     ],
 
     shared_libs: [
