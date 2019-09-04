@@ -20,7 +20,6 @@
 #include "AudioInputDescriptor.h"
 #include "IOProfile.h"
 #include "AudioGain.h"
-#include "AudioPolicyMix.h"
 #include "HwModule.h"
 #include <media/AudioPolicy.h>
 #include <policy.h>

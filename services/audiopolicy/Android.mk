@@ -70,6 +70,15 @@ endif
 # DOLBY_END
 LOCAL_CFLAGS += -Wall -Werror
 
+ifeq ($(BOARD_USES_MTK_HARDWARE),true)
+LOCAL_CFLAGS += -DMTK_HARDWARE
+
+LOCAL_SHARED_LIBRARIES += \
+    libmedia \
+    libaudiocustparam
+
+endif
+
 include $(BUILD_SHARED_LIBRARY)
 
 ifneq ($(USE_LEGACY_AUDIO_POLICY), 1)
@@ -129,6 +138,14 @@ endif
 LOCAL_CFLAGS += -Wall -Werror
 
 LOCAL_MULTILIB := $(AUDIOSERVER_MULTILIB)
+ifeq ($(BOARD_USES_MTK_HARDWARE),true)
+LOCAL_CFLAGS += -DMTK_HARDWARE
+
+LOCAL_SHARED_LIBRARIES += \
+    libmedia \
+    libaudiocustparam
+
+endif
 
 LOCAL_MODULE:= libaudiopolicymanagerdefault
 
@@ -159,6 +176,14 @@ endif
 LOCAL_CFLAGS := -Wall -Werror
 
 LOCAL_MULTILIB := $(AUDIOSERVER_MULTILIB)
+ifeq ($(BOARD_USES_MTK_HARDWARE),true)
+LOCAL_CFLAGS += -DMTK_HARDWARE
+
+LOCAL_SHARED_LIBRARIES += \
+    libmedia \
+    libaudiocustparam
+
+endif
 
 LOCAL_MODULE:= libaudiopolicymanager
 

@@ -936,6 +936,14 @@ status_t StagefrightRecorder::start() {
 }
 
 sp<MediaCodecSource> StagefrightRecorder::createAudioSource() {
+#ifdef MTK_HARDWARE
+    //MTK80721 HDRecord 2011-12-23
+    if ((mAudioEncoder == AUDIO_ENCODER_AAC || mAudioEncoder == AUDIO_ENCODER_HE_AAC || mAudioEncoder == AUDIO_ENCODER_AAC_ELD) && mSampleRate < 16000)
+    {
+        ALOGD("encode profile tuning:encode:%d,samplerate:%d,min smplerate=16K",mAudioEncoder, mSampleRate);
+        mSampleRate = 16000;
+    }
+#endif
     int32_t sourceSampleRate = mSampleRate;
 
     if (mCaptureFpsEnable && mCaptureFps >= mFrameRate) {
@@ -1566,6 +1574,14 @@ status_t StagefrightRecorder::setupVideoEncoder(
             break;
     }
 
+    // force hw video encoder for camera
+    if (mVideoSource == VIDEO_SOURCE_CAMERA) {
+        AString mime;
+        CHECK(format->findString("mime", &mime));
+        mime.append("_cam");
+        format->setString("mime", mime);
+    }
+
     if (cameraSource != NULL) {
         sp<MetaData> meta = cameraSource->getFormat();
 
@@ -1831,10 +1847,22 @@ status_t StagefrightRecorder::pause() {
     if (mPauseStartTimeUs != 0) {
         return OK;
     }
-
+#ifdef MTK_HARDWARE
+    if((mOutputFormat == OUTPUT_FORMAT_AMR_NB ||
+          mOutputFormat == OUTPUT_FORMAT_AMR_WB)
+          &&mAudioEncoderSource != NULL){
+            ALOGW("AMR will pause writer for support stop after pause");
+            mWriter->pause();
+    }else{
     if (mAudioEncoderSource != NULL) {
         mAudioEncoderSource->pause();
     }
+    }
+#else
+    if (mAudioEncoderSource != NULL) {
+        mAudioEncoderSource->pause();
+    }
+#endif
     if (mVideoEncoderSource != NULL) {
         mVideoEncoderSource->pause();
     }
@@ -1885,6 +1913,13 @@ status_t StagefrightRecorder::resume() {
         if (source == nullptr) {
             continue;
         }
+#ifdef MTK_HARDWARE
+        if (mOutputFormat == OUTPUT_FORMAT_AMR_NB || mOutputFormat == OUTPUT_FORMAT_AMR_WB) {
+            ALOGD("AMR Recording pause-resume");
+            mWriter->start();
+            continue;
+        }
+#endif
         source->setInputBufferTimeOffset((int64_t)timeOffset);
         source->start();
     }

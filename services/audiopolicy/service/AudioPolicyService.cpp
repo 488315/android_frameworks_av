@@ -57,7 +57,38 @@ namespace {
     extern struct audio_policy_service_ops aps_ops;
 };
 #endif
+// mtk start
+status_t AudioPolicyService::getCustomAudioVolume(void* pCustomVol)
+{
+#ifdef MTK_HARDWARE
+    return mAudioCommandThread->getCustomAudioVolumeCommand(pCustomVol);
+#else
+    return INVALID_OPERATION;
+#endif
+}
 
+status_t     AudioPolicyService::AudioCommandThread::getCustomAudioVolumeCommand(void* pCustomVol)
+{
+#ifdef MTK_HARDWARE
+    status_t status = NO_ERROR;
+    sp<AudioCommand> command = new AudioCommand();
+    command->mCommand = GET_CUSTOM_AUDIO_VOLUME;
+
+    GetCustomAudioVolumeData *data = new GetCustomAudioVolumeData();
+    memcpy(&(data->mVolConfig),pCustomVol,sizeof(AUDIO_CUSTOM_VOLUME_STRUCT));
+    command->mParam = data;
+    command->mWaitStatus = true;
+    ALOGD("AudioCommandThread() adding set getCustomAudioVolume");
+    status = sendCommand(command);
+    if (status == NO_ERROR) {
+        memcpy(pCustomVol,&(data->mVolConfig),sizeof(AUDIO_CUSTOM_VOLUME_STRUCT));
+    }
+    return status;
+#else
+    return INVALID_OPERATION;
+#endif
+}
+// mtk end
 // ----------------------------------------------------------------------------
 
 AudioPolicyService::AudioPolicyService()
@@ -660,7 +691,19 @@ bool AudioPolicyService::AudioCommandThread::threadLoop()
                     svc->doOnOutputSessionEffectsUpdate(data->mAudioSessionInfo, data->mAdded);
                     mLock.lock();
                     } break;
-
+#ifdef MTK_HARDWARE
+                case GET_CUSTOM_AUDIO_VOLUME: {
+                    GetCustomAudioVolumeData *data = (GetCustomAudioVolumeData *)command->mParam.get();
+                    ALOGV("AudioCommandThread() processing GET_CUSTOM_AUDIO_VOLUME");
+                    sp<IAudioFlinger> af = AudioSystem::get_audio_flinger();
+                    if (af == 0) {
+                        command->mStatus = PERMISSION_DENIED;
+                    } else {
+                        command->mStatus = af->GetAudioData(GET_AUDIO_POLICY_VOL_FROM_VER1_DATA,sizeof(AUDIO_CUSTOM_VOLUME_STRUCT),&(data->mVolConfig));
+                    }
+                    ALOGV("-AudioCommandThread %d",command->mCommand);
+                    } break;
+#endif
                 default:
                     ALOGW("AudioCommandThread() unknown command %d", command->mCommand);
                 }

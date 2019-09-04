@@ -92,8 +92,7 @@ LOCAL_ARM_MODE := arm
 
 LOCAL_STATIC_LIBRARIES :=
 
-LOCAL_SHARED_LIBRARIES := \
-        liblog
+LOCAL_SHARED_LIBRARIES :=
 
 LOCAL_C_INCLUDES := \
 	frameworks/av/include \

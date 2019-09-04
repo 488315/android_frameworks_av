@@ -44,6 +44,8 @@
 #define UNUSED_UNLESS_VERBOSE(x)
 #endif
 
+
+
 namespace android {
 
 static const int64_t CAMERA_SOURCE_TIMEOUT_NS = 3000000000LL;
@@ -113,11 +115,11 @@ void CameraSourceListener::postRecordingFrameHandleTimestamp(nsecs_t timestamp,
 }
 
 static int32_t getColorFormat(const char* colorFormat) {
+
     if (!colorFormat) {
         ALOGE("Invalid color format");
         return -1;
     }
-
     if (!strcmp(colorFormat, CameraParameters::PIXEL_FORMAT_YUV420P)) {
        return OMX_COLOR_FormatYUV420Planar;
     }

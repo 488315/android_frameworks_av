@@ -27,7 +27,6 @@
 namespace android {
 
 class AudioPolicyClientInterface;
-class AudioPolicyMix;
 
 class AudioSession : public RefBase, public AudioSessionInfoUpdateListener
 {
@@ -40,7 +39,7 @@ public:
                  audio_input_flags_t flags,
                  uid_t uid,
                  bool isSoundTrigger,
-                 const sp<AudioPolicyMix> &policyMix,
+                 AudioMix* policyMix,
                  AudioPolicyClientInterface *clientInterface);
 
     status_t dump(int fd, int spaces, int index) const;
@@ -73,7 +72,7 @@ private:
     bool  mIsSoundTrigger;
     uint32_t  mOpenCount;
     uint32_t  mActiveCount;
-    wp<AudioPolicyMix> mPolicyMix; // non NULL when used by a dynamic policy
+    AudioMix* mPolicyMix; // non NULL when used by a dynamic policy
     AudioPolicyClientInterface* mClientInterface;
     const AudioSessionInfoProvider* mInfoProvider;
 };

@@ -50,4 +50,12 @@ LOCAL_SHARED_LIBRARIES += \
     libutils \
     libaudioutils \
 
+
+LOCAL_CFLAGS += -DMTK_HARDWARE
+
+LOCAL_SHARED_LIBRARIES += \
+    libmedia \
+    libaudiocustparam
+
+
 include $(BUILD_SHARED_LIBRARY)

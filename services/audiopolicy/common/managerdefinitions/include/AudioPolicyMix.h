@@ -29,11 +29,9 @@ class SwAudioOutputDescriptor;
 /**
  * custom mix entry in mPolicyMixes
  */
-class AudioPolicyMix : public AudioMix, public RefBase {
+class AudioPolicyMix : public RefBase {
 public:
-    AudioPolicyMix(const AudioMix &mix);
-    AudioPolicyMix(const AudioPolicyMix&) = delete;
-    AudioPolicyMix& operator=(const AudioPolicyMix&) = delete;
+    AudioPolicyMix() {}
 
     const sp<SwAudioOutputDescriptor> &getOutput() const;
 
@@ -41,7 +39,12 @@ public:
 
     void clearOutput();
 
+    android::AudioMix *getMix();
+
+    void setMix(AudioMix &mix);
+
 private:
+    AudioMix    mMix;                   // Audio policy mix descriptor
     sp<SwAudioOutputDescriptor> mOutput;  // Corresponding output stream
 };
 
@@ -71,9 +74,9 @@ public:
 
     audio_devices_t getDeviceAndMixForInputSource(audio_source_t inputSource,
                                                   audio_devices_t availableDeviceTypes,
-                                                  sp<AudioPolicyMix> *policyMix);
+                                                  AudioMix **policyMix);
 
-    status_t getInputMixForAttr(audio_attributes_t attr, sp<AudioPolicyMix> *policyMix);
+    status_t getInputMixForAttr(audio_attributes_t attr, AudioMix **policyMix);
 };
 
 }; // namespace android

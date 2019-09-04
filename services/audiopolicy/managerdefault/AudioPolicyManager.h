@@ -62,6 +62,10 @@
 #include <SoundTriggerSession.h>
 #include <SessionRoute.h>
 #include <VolumeCurve.h>
+#include <AudioPolicyVendorControl.h>
+#include <utils/threads.h>
+#include <AudioCustParam.h>
+#include <AudioCustomVolume.h>
 
 namespace android {
 
@@ -216,6 +220,8 @@ public:
         virtual status_t dump(int fd);
 
         virtual bool isOffloadSupported(const audio_offload_info_t& offloadInfo);
+	
+	virtual status_t SetPolicyManagerParameters(int par1,int par2 ,int par3,int par4);
 
         virtual status_t listAudioPorts(audio_port_role_t role,
                                         audio_port_type_t type,
@@ -293,6 +299,10 @@ protected:
         virtual const sp<DeviceDescriptor> &getDefaultOutputDevice() const
         {
             return mDefaultOutputDevice;
+        }
+        virtual AudioPolicyVendorControl &getAudioPolicyVendorControl()
+        {
+            return mAudioPolicyVendorControl;
         }
 protected:
         void addOutput(audio_io_handle_t output, sp<SwAudioOutputDescriptor> outputDesc);
@@ -607,6 +617,8 @@ protected:
 
         // Audio Policy Engine Interface.
         AudioPolicyManagerInterface *mEngine;
+        AudioPolicyVendorControl mAudioPolicyVendorControl;
+        void LoadCustomVolume(void);
 private:
         // Add or remove AC3 DTS encodings based on user preferences.
         void filterSurroundFormats(FormatVector *formatsPtr);
@@ -649,7 +661,7 @@ protected:
                 audio_format_t format,
                 audio_channel_mask_t channelMask,
                 audio_input_flags_t flags,
-                const sp<AudioPolicyMix> &policyMix);
+                AudioMix *policyMix);
 
         // internal function to derive a stream type value from audio attributes
         audio_stream_type_t streamTypefromAttributesInt(const audio_attributes_t *attr);
@@ -663,7 +675,7 @@ protected:
         // select input device corresponding to requested audio source and return associated policy
         // mix if any. Calls getDeviceForInputSource().
         audio_devices_t getDeviceAndMixForInputSource(audio_source_t inputSource,
-                                                      sp<AudioPolicyMix> *policyMix = NULL);
+                                                        AudioMix **policyMix = NULL);
 
         // Called by setDeviceConnectionState().
         virtual status_t setDeviceConnectionStateInt(audio_devices_t device,
@@ -680,6 +692,16 @@ protected:
 #include "DolbyAudioPolicy.h"
         DolbyAudioPolicy mDolbyAudioPolicy;
 #endif // DOLBY_END
+private:
+        float linearToLog(int volume);
+        int logToLinear(float volume);
+        int mapVol(float &vol, float unitstep);
+        int mapping_Voice_vol(float &vol, float unitstep);
+        float computeCustomVolume(int stream, int index, audio_devices_t device);
+        int getStreamMaxLevels(int  stream);
+            float mapVoiceVoltoCustomVol(unsigned char array[], int volmin, int volmax, float &vol, int vol_stream_type);
+        float mapVoltoCustomVol(unsigned char array[], int volmin, int volmax,float &vol , int stream);
+		AUDIO_CUSTOM_VOLUME_STRUCT mAudioCustVolumeTable;
 };
 
 };

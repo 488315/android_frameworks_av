@@ -18,7 +18,6 @@
 //#define LOG_NDEBUG 0
 
 #include <AudioPolicyInterface.h>
-#include "AudioPolicyMix.h"
 #include "AudioSession.h"
 #include "AudioGain.h"
 #include "TypeConverter.h"
@@ -35,7 +34,7 @@ AudioSession::AudioSession(audio_session_t session,
                            audio_input_flags_t flags,
                            uid_t uid,
                            bool isSoundTrigger,
-                           const sp<AudioPolicyMix> &policyMix,
+                           AudioMix* policyMix,
                            AudioPolicyClientInterface *clientInterface) :
     mSession(session), mInputSource(inputSource),
     mConfig({ .format = format, .sample_rate = sampleRate, .channel_mask = channelMask}),
@@ -78,10 +77,9 @@ uint32_t AudioSession::changeActiveCount(int delta)
     if (event != RECORD_CONFIG_EVENT_NONE) {
         // Dynamic policy callback:
         // if input maps to a dynamic policy with an activity listener, notify of state change
-        sp<AudioPolicyMix> policyMix = mPolicyMix.promote();
-        if ((policyMix != NULL) && ((policyMix->mCbFlags & AudioMix::kCbFlagNotifyActivity) != 0))
+        if ((mPolicyMix != NULL) && ((mPolicyMix->mCbFlags & AudioMix::kCbFlagNotifyActivity) != 0))
         {
-            mClientInterface->onDynamicPolicyMixStateUpdate(policyMix->mDeviceAddress,
+            mClientInterface->onDynamicPolicyMixStateUpdate(mPolicyMix->mDeviceAddress,
                     (event == RECORD_CONFIG_EVENT_START) ? MIX_STATE_MIXING : MIX_STATE_IDLE);
         }
 

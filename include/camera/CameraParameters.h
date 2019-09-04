@@ -538,6 +538,9 @@ public:
     // Supported modes for special effects with light.
     // Example values: "lowlight,hdr".
     static const char KEY_LIGHTFX[];
+#ifdef MTK_HARDWARE
+    static const char KEY_SNAPSHOT_PICTURE_FLIP[];
+#endif
 
     // Value for KEY_ZOOM_SUPPORTED or KEY_SMOOTH_ZOOM_SUPPORTED.
     static const char TRUE[];
