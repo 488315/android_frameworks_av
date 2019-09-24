@@ -135,6 +135,7 @@ cc_library_shared {
         "StagefrightMediaScanner.cpp",
         "StagefrightMetadataRetriever.cpp",
         "StagefrightPluginLoader.cpp",
+        "SurfaceMediaSource.cpp",
         "SurfaceUtils.cpp",
         "Utils.cpp",
         "ThrottledSource.cpp",
@@ -329,5 +330,6 @@ subdirs = [
     "tests",
     "timedtext",
     "webm",
+    "wifi-display",
     "xmlparser",
 ]
